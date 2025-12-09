@@ -5,6 +5,9 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PaymentController;
+
+// Hapus duplikat: use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -46,7 +49,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/beranda', [PageController::class, 'adminDashboard'])->name('dashboard');
     Route::get('/kelola-paket', [PageController::class, 'adminManagePackages'])->name('manage.packages');
     Route::get('/verifikasi-pembayaran', [PageController::class, 'adminVerifyPayments'])->name('verify.payments');
-    
+
     // API-like routes for admin
     Route::post('/paket/tambah', [\App\Http\Controllers\PackageController::class, 'webStore'])->name('packages.store');
     Route::put('/paket/{id}/update', [\App\Http\Controllers\PackageController::class, 'webUpdate'])->name('packages.update');
@@ -54,4 +57,32 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/tanggal/tambah', [\App\Http\Controllers\PackageController::class, 'webAddDate'])->name('dates.store');
     Route::put('/pembayaran/{id}/verifikasi', [BookingController::class, 'adminVerifyPayment'])->name('payment.verify');
     Route::delete('/pendaftar/{id}/hapus', [BookingController::class, 'adminDelete'])->name('booking.delete');
+});
+
+// Payment routes
+Route::middleware(['auth'])->group(function () {
+    // Payment pages
+    Route::get('/payment/{order}', [PaymentController::class, 'showPayment'])->name('payment.show');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+    Route::get('/payment/history', [PaymentController::class, 'history'])->name('payment.history');
+
+    // API endpoints for frontend
+    Route::post('/api/payment/create/{order}', [PaymentController::class, 'createPayment'])->name('api.payment.create');
+    Route::post('/api/payment/check-status', [PaymentController::class, 'checkStatus'])->name('api.payment.check-status');
+});
+
+// Midtrans webhook (no auth required)
+Route::post('/api/midtrans/notification', [PaymentController::class, 'handleNotification'])
+    ->name('api.midtrans.notification');
+    
+// Test route untuk check midtrans config
+Route::get('/check-midtrans-config', function() {
+    return response()->json([
+        'server_key' => config('services.midtrans.server_key'),
+        'client_key' => config('services.midtrans.client_key'),
+        'is_production' => config('services.midtrans.is_production'),
+        'merchant_id' => config('services.midtrans.merchant_id'),
+        'message' => 'Midtrans configuration loaded successfully'
+    ]);
 });
