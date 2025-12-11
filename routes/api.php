@@ -8,7 +8,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 
-// Public routes
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -16,13 +16,12 @@ Route::get('/packages', [PackageController::class, 'index']);
 Route::get('/packages/{slug}', [PackageController::class, 'show']);
 Route::post('/contact', [ContactController::class, 'store']);
 
-// Payment gateway routes (public untuk callback dari Midtrans)
+
 Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification']);
 Route::post('/midtrans/finish', [PaymentController::class, 'handleFinish']);
 Route::post('/midtrans/unfinish', [PaymentController::class, 'handleUnfinish']);
 Route::post('/midtrans/error', [PaymentController::class, 'handleError']);
 
-// Testing routes (hapus di production)
 Route::get('/check-midtrans-config', function() {
     return response()->json([
         'server_key' => config('services.midtrans.server_key'),
@@ -34,20 +33,19 @@ Route::get('/check-midtrans-config', function() {
     ]);
 });
 
-// Protected routes
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
-    // User bookings
+   
     Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
     Route::post('/bookings/{id}/upload-payment', [BookingController::class, 'uploadPaymentProof']);
     
-    // Payment gateway integration for bookings
     Route::post('/bookings/{id}/pay', [PaymentController::class, 'createPayment']);
     Route::get('/bookings/{id}/payment-status', [PaymentController::class, 'checkPaymentStatus']);
     
-    // User profile update
+  
     Route::put('/profile', function (Request $request) {
         $user = $request->user();
         $user->update($request->validate([
@@ -59,28 +57,27 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
     });
 
-    // Payment history
+    
     Route::get('/payment/history', [PaymentController::class, 'paymentHistory']);
 
-    // Admin routes
     Route::middleware('admin')->group(function () {
-        // Package management
+        
         Route::apiResource('admin/packages', PackageController::class)->except(['index', 'show']);
         Route::post('/admin/packages/{packageId}/dates', [PackageController::class, 'addDate']);
         
-        // Booking management
+        
         Route::put('/admin/bookings/{id}/payment', [BookingController::class, 'updatePayment']);
         Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy']);
         
-        // Contact management
+        
         Route::apiResource('admin/contacts', ContactController::class)->only(['index', 'update', 'destroy']);
         Route::put('/admin/contacts/{id}/status', [ContactController::class, 'updateStatus']);
         
-        // Payment management
+       
         Route::get('/admin/payments', [PaymentController::class, 'index']);
         Route::put('/admin/payments/{id}/status', [PaymentController::class, 'updateManualStatus']);
         
-        // Dashboard statistics
+      
         Route::get('/admin/dashboard/stats', function () {
             $totalUsers = \App\Models\User::count();
             $totalPackages = \App\Models\Package::count();

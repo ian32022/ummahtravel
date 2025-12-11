@@ -153,4 +153,105 @@ class BookingController extends Controller
             'booking' => $booking
         ]);
     }
+    public function webStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'package_id' => 'required|exists:packages,id',
+            'package_date_id' => 'required|exists:package_dates,id',
+            'room_type' => 'required|in:double,triple,quad',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $user = Auth::user();
+        $package = Package::findOrFail($request->package_id);
+        $packageDate = PackageDate::findOrFail($request->package_date_id);
+
+        // Check availability
+        if ($packageDate->available_slots <= 0) {
+            return redirect()->back()
+                ->with('error', 'Maaf, kuota untuk tanggal ini sudah penuh.')
+                ->withInput();
+        }
+
+        $totalPrice = $package->getPriceByRoomType($request->room_type);
+
+        $booking = Booking::create([
+            'user_id' => $user->id,
+            'package_id' => $package->id,
+            'package_date_id' => $packageDate->id,
+            'room_type' => $request->room_type,
+            'total_price' => $totalPrice,
+            'status' => 'pending',
+            'payment_status' => 'unpaid'
+        ]);
+
+        return redirect()->route('booking.confirmation')
+            ->with('success', 'Pemesanan berhasil! Silakan lanjutkan pembayaran.')
+            ->with('booking_id', $booking->id);
+    }
+
+    public function webUploadPayment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required|exists:bookings,id',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'payment_method' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $booking = Booking::findOrFail($request->booking_id);
+        
+        if (Auth::user()->id !== $booking->user_id) {
+            return redirect()->back()
+                ->with('error', 'Akses ditolak.');
+        }
+
+        $path = $request->file('payment_proof')->store('payment-proofs', 'public');
+
+        $booking->update([
+            'payment_proof' => $path,
+            'payment_method' => $request->payment_method,
+            'payment_status' => 'pending'
+        ]);
+
+        return redirect()->route('my.umrah')
+            ->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu verifikasi admin.');
+    }
+
+    public function adminVerifyPayment(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        
+        $request->validate([
+            'payment_status' => 'required|in:unpaid,pending,paid,failed',
+        ]);
+
+        $booking->update([
+            'payment_status' => $request->payment_status,
+            'payment_date' => $request->payment_status === 'paid' ? now() : null,
+            'status' => $request->payment_status === 'paid' ? 'confirmed' : 'pending'
+        ]);
+
+        return redirect()->route('admin.verify.payments')
+            ->with('success', 'Status pembayaran berhasil diperbarui.');
+    }
+
+    public function adminDelete(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->delete();
+
+        return redirect()->route('admin.verify.payments')
+            ->with('success', 'Data pendaftar berhasil dihapus.');
+    }
 }
