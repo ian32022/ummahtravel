@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umroh + Turki | Nasrotul Ummah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style3.css">
+    <link rel="stylesheet" href="public/css/style3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Scheherazade&display=swap">
     <style>
         .package-hero {
@@ -17,7 +17,7 @@
 
         .package-image-card {
             /* Ganti gambar latar belakang */
-            background: url('turki.jpeg') no-repeat center center/cover;
+            background: url('public/image/turki.jpeg') no-repeat center center/cover;
             height: 650px;
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -205,7 +205,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script3.js"></script>
+    <script src="public/js/script3.js"></script>
 </body>
 
 </html>

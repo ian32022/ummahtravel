@@ -40,7 +40,7 @@ body, html {
 }
 
 .jumbotron {
-  background: url('tentangkami.png') no-repeat center center/cover;
+  background: url('image/tentangkami.png') no-repeat center center/cover;
   height: 155vh;
   position: relative;
 }
