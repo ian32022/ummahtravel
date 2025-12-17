@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umroh + Turki | Nasrotul Ummah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="public/css/style3.css">
+    <link rel="stylesheet" href="{{ asset('css/style3.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Scheherazade&display=swap">
     <style>
         .package-hero {
@@ -17,7 +17,7 @@
 
         .package-image-card {
             /* Ganti gambar latar belakang */
-            background: url('public/image/turki.jpeg') no-repeat center center/cover;
+            background: url('{{ asset("image/umroh_turki_potrait.png") }}') no-repeat center center/cover, url('{{ asset("image/turki.jpeg") }}') no-repeat center center/cover, url('image/turki.jpeg') no-repeat center center/cover;
             height: 650px;
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -67,17 +67,17 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand arabic-logo" href="#">Nasrotul Ummah</a>
+            <a class="navbar-brand arabic-logo" href="{{route('home')}}">Nasrotul Ummah</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tentangkami.html">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="daftarumroh.html">Daftar Umroh</a></li>
-                    <li class="nav-item"><a class="nav-link" href="umrohsaya.html">Umroh Saya</a></li>
-                    <li class="nav-item"><a class="nav-link" href="hubungi-kami.html">Hubungi Kami</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{route('home')}}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('about')}}">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('packages')}}">Daftar Umroh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('my.umrah')}}">Umroh Saya</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Hubungi Kami</a></li>
                 </ul>
             </div>
         </div>
@@ -188,7 +188,7 @@
         <div class="container">
             <h3 class="fw-bold mb-3">Umroh Plus 12 Hari</h3>
             <p>Dapatkan penawaran harga menarik sekarang juga sebelum kehabisan.</p>
-            <a href="form_pemesanan.html" class="btn btn-booking text-decoration-none">Pesan Sekarang</a>
+            <a href="{{ route('booking.form') }}" class="btn btn-booking text-decoration-none">Pesan Sekarang</a>
 
         </div>
     </section>
@@ -205,7 +205,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="public/js/script3.js"></script>
+    <script src="{{ asset('js/script3.js') }}"></script>
+
 </body>
 
 </html>

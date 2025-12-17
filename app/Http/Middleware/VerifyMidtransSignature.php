@@ -14,26 +14,29 @@ class VerifyMidtransSignature
         if (app()->environment('local')) {
             return $next($request);
         }
-        
+
         $serverKey = config('services.midtrans.server_key');
         $orderId = $request->input('order_id');
         $statusCode = $request->input('status_code');
         $grossAmount = $request->input('gross_amount');
         $signatureKey = $request->input('signature_key');
-        
-        // Generate expected signature
+
+        if (!$serverKey || !$orderId || !$statusCode || !$grossAmount) {
+            return response()->json(['error' => 'Invalid notification data'], 400);
+        }
+
         $expectedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
-        
+
         if ($signatureKey !== $expectedSignature) {
             Log::warning('Invalid Midtrans signature', [
                 'order_id' => $orderId,
                 'expected' => $expectedSignature,
                 'received' => $signatureKey,
             ]);
-            
+
             return response()->json(['error' => 'Invalid signature'], 403);
         }
-        
+
         return $next($request);
     }
 }

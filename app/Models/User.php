@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -15,9 +16,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
         'phone',
         'address',
+        'role',
         'emergency_contact_name',
         'emergency_contact_phone'
     ];
@@ -29,15 +30,21 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
-    public function bookings()
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
     }
 
-    public function isAdmin()
+    public function payments(): HasMany
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Payment::class);
     }
 }

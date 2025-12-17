@@ -2,73 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'required|string|max:20',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
-            'role' => 'user'
-        ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Registration successful',
-            'user' => $user,
-            'token' => $token
-        ], 201);
-    }
-
+    // LOGIN
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|min:6',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        $remember = $request->has('remember');
+
+        if (!Auth::attempt($credentials, $remember)) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah'
+            ]);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = Auth::user();
 
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user,
-            'token' => $token
+        // Redirect berdasarkan role
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('my.umrah');
+    }
+
+    // REGISTER USER
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:100',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
+
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => 'user',
+        ]);
+
+        return redirect('/login')->with('success', 'Akun berhasil dibuat');
     }
 
-    public function logout(Request $request)
+    // LOGOUT
+    public function logout()
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out successfully']);
-    }
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-    public function me(Request $request)
-    {
-        return response()->json($request->user());
+        return redirect('/login');
     }
 }

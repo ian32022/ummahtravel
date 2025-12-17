@@ -40,7 +40,7 @@ body, html {
 }
 
 .jumbotron {
-  background: url('image/beranda.png') no-repeat center center/cover;
+  background: url('../image/beranda.png') no-repeat center center/cover;
   height: 125vh;
   position: relative;
 }

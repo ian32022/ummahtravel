@@ -98,7 +98,7 @@ body {
 
 /* --- JUMBOTRON LIST (UNTUK DAFTAR UMROH) --- */
 .jumbotron-list {
-  background: url('image/daftar_umroh.png') no-repeat center center/cover;
+  background: url('../image/daftar_umroh.png') no-repeat center center/cover;
   height: 100vh; 
   position: relative;
   /* Hapus margin-top atau sesuaikan */

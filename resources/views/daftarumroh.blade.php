@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Daftar Umroh | Nasrotul Ummah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="public/css/style3.css">
+    <link rel="stylesheet" href="{{ asset('css/style3.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Scheherazade&display=swap">
 </head>
 
@@ -14,17 +14,17 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand arabic-logo" href="#">Nasrotul Ummah</a>
+            <a class="navbar-brand arabic-logo" href="{{route('home')}}">Nasrotul Ummah</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tentangkami.html">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="daftarumroh.html">Daftar Umroh</a></li>
-                    <li class="nav-item"><a class="nav-link" href="umrohsaya.html">Umroh Saya</a></li>
-                    <li class="nav-item"><a class="nav-link" href="hubungi-kami.html">Hubungi Kami</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{route('home')}}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('about')}}">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('packages')}}">Daftar Umroh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('my.umrah')}}">Umroh Saya</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Hubungi Kami</a></li>
                 </ul>
             </div>
         </div>
@@ -44,33 +44,33 @@
 
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <img src="public/image/umroh_dubai.png" class="card-img-top" alt="Umroh + Dubai" loading="lazy">
+                        <img src="{{ asset('image/umroh_dubai.png') }}" class="card-img-top" alt="Umroh + Dubai" loading="lazy">
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">UMRAH + DUBAI</h5>
                             <p class="card-text text-muted">12 Hari</p>
-                            <a href="detail_dubai.html" class="btn btn-success mt-2">Lihat Detail</a>
+                            <a href="{{route('package.dubai')}}" class="btn btn-success mt-2">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <img src="public/image/umroh_turkey.png" class="card-img-top" alt="Umroh + Turki" loading="lazy">
+                        <img src="{{ asset('image/umroh_turkey.png') }}" class="card-img-top" alt="Umroh + Turki" loading="lazy">
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">UMRAH + TURKI</h5>
                             <p class="card-text text-muted">12 Hari</p>
-                            <a href="detail_turki.html" class="btn btn-success mt-2">Lihat Detail</a>
+                            <a href="{{route('package.turki')}}" class="btn btn-success mt-2">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <img src="public/image/umroh_reguler.png" class="card-img-top" alt="Umroh Reguler" loading="lazy">
+                        <img src="{{ asset('image/umroh_reguler.png') }}" class="card-img-top" alt="Umroh Reguler" loading="lazy">
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">UMRAH REGULER</h5>
                             <p class="card-text text-muted">09 Hari</p>
-                            <a href="detail_reguler.html" class="btn btn-success mt-2">Lihat Detail</a>
+                            <a href="{{route('package.reguler')}}" class="btn btn-success mt-2">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="public/js/script.js"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>

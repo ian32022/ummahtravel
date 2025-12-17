@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Booking extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'package_id',
@@ -17,27 +15,30 @@ class Booking extends Model
         'total_price',
         'status',
         'payment_status',
-        'payment_method',
         'payment_proof',
-        'payment_date'
+        'payment_method',
+        'payment_date',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'notes'
     ];
 
     protected $casts = [
-        'total_price' => 'decimal:2',
-        'payment_date' => 'datetime'
+        'total_price' => 'integer',
+        'payment_date' => 'datetime',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function package()
+    public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class);
     }
 
-    public function packageDate()
+    public function packageDate(): BelongsTo
     {
         return $this->belongsTo(PackageDate::class);
     }

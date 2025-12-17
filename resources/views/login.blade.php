@@ -12,7 +12,7 @@
 
         body {
             /* Latar belakang yang menyerupai gambar */
-            background: url('public/image/beranda.png') no-repeat center center/cover;
+            background: url('{{ asset("image/beranda.png") }}') no-repeat center center/cover;
             height: 100vh;
             margin: 0;
             display: flex;
