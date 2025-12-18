@@ -79,7 +79,31 @@
                     <li class="nav-item"><a class="nav-link" href="{{route('packages')}}">Daftar Umroh</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{route('my.umrah')}}">Umroh Saya</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Hubungi Kami</a></li>
-                </ul>
+                 {{-- HANYA MUNCUL JIKA SUDAH LOGIN --}}
+                                                        @auth
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="{{ route('my.umrah') }}">Umroh Saya</a>
+                                                            </li>
+
+                                                            <li class="nav-item ms-2">
+                                                                <form action="{{ route('logout') }}" method="POST">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-sm btn-outline-light">
+                                                                        Logout
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        @endauth
+
+                                                        {{-- HANYA MUNCUL JIKA BELUM LOGIN --}}
+                                                        @guest
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                                            </li>
+                                                        @endguest
+
+                                                    </ul>
+
             </div>
         </div>
     </nav>

@@ -44,7 +44,32 @@
                         <li class="nav-item"><a class="nav-link" href="{{route('packages')}}">Daftar Umroh</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{route('my.umrah')}}">Umroh Saya</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Hubungi Kami</a></li>
-                </ul>
+
+                                                        {{-- HANYA MUNCUL JIKA SUDAH LOGIN --}}
+                                                        @auth
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="{{ route('my.umrah') }}">Umroh Saya</a>
+                                                            </li>
+
+                                                            <li class="nav-item ms-2">
+                                                                <form action="{{ route('logout') }}" method="POST">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-sm btn-outline-light">
+                                                                        Logout
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        @endauth
+
+                                                        {{-- HANYA MUNCUL JIKA BELUM LOGIN --}}
+                                                        @guest
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                                            </li>
+                                                        @endguest
+
+                                                    </ul>
+
             </div>
         </div>
     </nav>
@@ -55,8 +80,8 @@
 
                 <div class="col-md-3 profile-sidebar">
                     <div class="profile-card p-3">
-                        <h5 class="fw-bold">Syafrina Maulana</h5>
-                        <p class="text-muted small">syafrinamaulana@gmail.com</p>
+                        <h5 class="fw-bold">{{ Auth::user()->name }}</h5>
+                            <p class="text-muted small">{{ Auth::user()->email }}</p>
                         <ul class="list-unstyled mt-4">
                             <li><a href="#" class="text-dark text-decoration-none d-block py-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
