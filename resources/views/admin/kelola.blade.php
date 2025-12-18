@@ -175,15 +175,15 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand arabic-logo" href="#">Nasrotul Ummah</a>
+            <a class="navbar-brand arabic-logo" href="{{ route('admin.dashboard') }}">Nasrotul Ummah</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="./beranda.html">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="./kelola.html">Kelola Paket Umroh</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./pendaftar.html">Verifikasi Pembayaran</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ route('admin.manage.packages') }}">Kelola Paket Umroh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.verify.payments') }}">Verifikasi Pembayaran</a></li>
                 </ul>
             </div>
         </div>

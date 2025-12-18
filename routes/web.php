@@ -6,63 +6,71 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 
-// Public routes
+/*
+|--------------------------------------------------------------------------
+| Public Pages
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/tentang-kami', [PageController::class, 'about'])->name('about');
 Route::get('/daftar-umroh', [PageController::class, 'packages'])->name('packages');
 Route::get('/hubungi-kami', [PageController::class, 'contact'])->name('contact');
 
-// Package detail pages
 Route::get('/paket/umroh-dubai', [PageController::class, 'packageDubai'])->name('package.dubai');
 Route::get('/paket/umroh-turki', [PageController::class, 'packageTurki'])->name('package.turki');
 Route::get('/paket/umroh-reguler', [PageController::class, 'packageReguler'])->name('package.reguler');
 
-// Authentication routes
-Route::middleware(['guest'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Auth (Guest Only)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
     Route::get('/login', [PageController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'webLogin']);
-    Route::post('/register', [AuthController::class, 'webRegister'])->name('register');
+    Route::post('/login', [AuthController::class, 'webLogin'])->name('login.process');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
-// Protected routes
-Route::middleware(['auth'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| User Area (Auth)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'webLogout'])->name('logout');
+
     Route::get('/umroh-saya', [PageController::class, 'myUmrah'])->name('my.umrah');
     Route::get('/profil', [PageController::class, 'profile'])->name('profile');
     Route::put('/profil/update', [PageController::class, 'updateProfile'])->name('profile.update');
+
     Route::get('/form-pemesanan', [PageController::class, 'bookingForm'])->name('booking.form');
     Route::get('/konfirmasi-pemesanan', [PageController::class, 'confirmation'])->name('booking.confirmation');
-    
+
     Route::post('/pesan', [BookingController::class, 'webStore'])->name('booking.store');
     Route::post('/upload-bukti-bayar', [BookingController::class, 'webUploadPayment'])->name('booking.upload');
 });
-// Login & Register
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [PageController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
-});
 
-// User Area
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/umroh-saya', [PageController::class, 'myUmrah'])->name('my.umrah');
-});
+/*
+|--------------------------------------------------------------------------
+| Admin Area
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-// Admin Area
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/beranda', [PageController::class, 'adminDashboard'])->name('dashboard');
-});
-// Admin routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/beranda', [PageController::class, 'adminDashboard'])->name('dashboard');
-    Route::get('/kelola-paket', [PageController::class, 'adminManagePackages'])->name('manage.packages');
-    Route::get('/verifikasi-pembayaran', [PageController::class, 'adminVerifyPayments'])->name('verify.payments');
-});
+        Route::get('/beranda', [PageController::class, 'adminDashboard'])->name('dashboard');
+        Route::get('/kelola-paket', [PageController::class, 'adminManagePackages'])->name('manage.packages');
+        Route::get('/verifikasi-pembayaran', [PageController::class, 'adminVerifyPayments'])->name('verify.payments');
+    });
 
-// Contact form (public)
+/*
+|--------------------------------------------------------------------------
+| Contact
+|--------------------------------------------------------------------------
+*/
 Route::post('/kontak', [ContactController::class, 'webStore'])->name('contact.store');
-
 // Test route untuk check midtrans config
 Route::get('/check-midtrans-config', function() {
     return response()->json([

@@ -10,30 +10,30 @@ use App\Models\User;
 class AuthController extends Controller
 {
     // LOGIN
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+   public function webLogin(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        $remember = $request->has('remember');
+    $remember = $request->boolean('remember');
 
-        if (!Auth::attempt($credentials, $remember)) {
-            return back()->withErrors([
-                'email' => 'Email atau password salah'
-            ]);
-        }
+    if (Auth::attempt($credentials, $remember)) {
+        $request->session()->regenerate();
 
-        $user = Auth::user();
-
-        // Redirect berdasarkan role
-        if ($user->role === 'admin') {
+        if (auth()->user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('my.umrah');
+        return redirect()->route('home');
     }
+
+    return back()->withErrors([
+        'email' => 'Email atau password salah',
+    ]);
+}
+
 
     // REGISTER USER
     public function register(Request $request)

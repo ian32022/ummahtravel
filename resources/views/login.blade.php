@@ -142,19 +142,46 @@
             <div class="role-button" id="admin-role">Administrator</div>
         </div>
 
-        <form>
-            <div class="mb-3">
-                <label for="inputEmail" class="form-label small">Email</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="masukkan email anda" required>
-            </div>
-            <div class="mb-3">
-                <label for="inputPassword" class="form-label small">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="masukkan password anda"
-                    required>
-            </div>
+       <form method="POST" action="{{ url('/login') }}">
+    @csrf
 
-            <button type="submit" class="btn btn-login" id="btnLogin">Login sebagai User</button>
-        </form>
+    <div class="mb-3">
+        <label class="form-label small">Email</label>
+        <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="masukkan email anda"
+            required
+        >
+        @error('email')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small">Password</label>
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="masukkan password anda"
+            required
+        >
+        @error('password')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" name="remember" class="form-check-input" id="remember">
+        <label class="form-check-label" for="remember">Ingat saya</label>
+    </div>
+
+    <button type="submit" class="btn btn-login w-100">
+        Login
+    </button>
+</form>
 
         <div class="text-center mt-3" id="forgotPasswordContainer">
             <a href="#" class="forgot-password-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Lupa
@@ -210,28 +237,56 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="registerUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="registerUsername"
-                                placeholder="Pilih Username Anda" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="registerEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="registerEmail"
-                                placeholder="Masukkan Email Aktif Anda" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="registerPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="registerPassword"
-                                placeholder="Buat Password" required>
-                        </div>
-                    </form>
+                   <form method="POST" action="{{ route('register') }}">
+    @csrf
+
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input
+            type="text"
+            name="name"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input
+            type="email"
+            name="email"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Konfirmasi Password</label>
+        <input
+            type="password"
+            name="password_confirmation"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <button type="submit" class="btn btn-modal-primary">
+        Daftar
+    </button>
+</form>
+
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-modal-primary">Daftar</button>
-                </div>
+                
             </div>
         </div>
     </div>
